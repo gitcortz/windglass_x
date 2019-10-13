@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Traits\Paginatable;
 use App\Customer;
 use App\Http\Resources\CustomerResource;
+use App\Http\Resources\CustomerCollection;
 use Validator;
 
 class CustomerController extends Controller
@@ -16,47 +17,29 @@ class CustomerController extends Controller
     public function index(Request $request)
     {
         //return CustomerResource::collection(Customer::paginate($this->getPerPage()));
-        return Customer::paginate($this->getPerPage());
+        // /return BookResource::collection(Book::with('ratings')->paginate(25));
+        \DB::listen(function($query) {
+            var_dump($query->sql);
+        });
 
-        //$customers = Customer::all();
-        /*
-        $query = Customer::where('name', $request->input('name'));
-        return $query->paginate($this->getPerPage());
-        */      
-
-        /*
-        $query = User::where('company_id', $request->input('company_id'));
-
-        if ($request->has('last_name'))
-        {
-            $query->where('last_name', 'LIKE', '%' . $request->input('last_name') . '%');
-        }
-
-        if ($request->has('name'))
-        {
-            $query->where(function ($q) use ($request)
-            {
-                return $q->where('first_name', 'LIKE', $request->input('name') . '%')
-                    ->orWhere('last_name', 'LIKE', '%' . $request->input('name') . '%');
-            });
-        }
-
-        $query->whereHas('roles', function ($q) use ($request)
-        {
-            return $q->whereIn('id', $request->input('roles'));
-        })
-            ->whereHas('clients', function ($q) use ($request)
-            {
-                return $q->whereHas('industry_id', $request->input('industry'));
-            });
-
-        return $query->get();
-        */
+        return new CustomerCollection(Customer::paginate($this->getPerPage()));
+        
     }
  
     public function show(Customer $customer)
     {
-        return response()->json(['data' => $customer, 'test' => Auth::guard('api')->user()], 200);
+        \DB::listen(function($query) {
+            var_dump($query->sql);
+        });
+        
+        return ((new CustomerResource($customer))->additional([
+            'meta' => [
+                'anything' => 'Some Value'
+            ]
+        ]));
+
+        
+        //return response()->json(['data' => $customer, 'test' => Auth::guard('api')->user()], 200);
 
         //return $customer;
     }
