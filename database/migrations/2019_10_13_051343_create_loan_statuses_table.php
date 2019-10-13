@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePosSessionsTable extends Migration
+class CreateLoanStatusesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,9 @@ class CreatePosSessionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('pos_sessions', function (Blueprint $table) {
+        Schema::create('loan_statuses', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
-            $table->decimal('start_balance', 9, 2);
-            $table->decimal('expected_balance', 9, 2)->nullable();
-            $table->decimal('end_balance', 9, 2)->nullable();
-            $table->enum('pos_status', ['open', 'close']);
-            $table->dateTime('closed_at')->nullable();            
             $table->timestamps();
         });
     }
@@ -32,6 +27,6 @@ class CreatePosSessionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pos_sessions');
+        Schema::dropIfExists('loan_statuses');
     }
 }

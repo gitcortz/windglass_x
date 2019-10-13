@@ -11,7 +11,7 @@ class Employee extends Model
 
     protected $fillable = ['first_name', 'last_name', 'address', 'city', 'phone', 'mobile', 'notes', 'salary', 'hire_date'];
 
-    public function orders(){
-        return $this->hasMany('App\Order');
+    public function employeeLoans(){
+        return $this->hasMany('App\EmployeeLoan');
     }
 }
